@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    environment {
+        AWS_ACCESS_KEY_ID     = 'AKIA6HEG2ICM467I37AM'
+        AWS_SECRET_ACCESS_KEY = '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'
+        AWS_DEFAULT_REGION    = 'us-east-1'
+    }
+
+    stages {
+        stage('Create Folder in S3 with Current Date') {
+            steps {
+                script {
+                    def currentDate = sh(script: 'date "+%Y%m%d"', returnStdout: true).trim()
+
+                    sh "aws s3api put-object --bucket decembers3 --key ${currentDate}/"
+                }
+            }
+        }
+    }
+}
