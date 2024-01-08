@@ -1,0 +1,25 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Delete Old Files from S3') {
+            steps {
+                script {
+                    // Calculate date one day ago using Groovy
+                    def currentDate = new Date()
+                    def oneDayAgo = currentDate - 1
+
+                    // Format the date as YYYY-MM-DD
+                    def formattedDate = oneDayAgo.format("yyyy-MM-dd")
+
+                    echo "One day ago: ${formattedDate}"
+
+                    // Continue with the rest of your script
+                    def s3ListOutput = sh(script: 'aws s3api list-objects --bucket decembers3 --output json', returnStdout: true).trim()
+                    // Process s3ListOutput as needed
+                    sh "aws s3 rm s3://decembers3/.git/HEAD"
+                }
+            }
+        }
+    }
+}
