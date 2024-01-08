@@ -1,0 +1,16 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Jenkin') {
+            steps {
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'Jenkins_s3', url: 'https://github.com/rachnazanwar/December24.git']])
+            }
+        }
+        stage('Deploy') {
+            steps {
+                s3Upload consoleLogLevel: 'INFO', dontSetBuildResultOnFailure: false, dontWaitForConcurrentBuildCompletion: false, entries: [[bucket: 'decembers3', excludedFile: '', flatten: false, gzipFiles: false, keepForever: false, managedArtifacts: false, noUploadOnFailure: false, selectedRegion: 'us-east-1', showDirectlyInBrowser: false, sourceFile: '**/*', storageClass: 'STANDARD', uploadFromSlave: false, useServerSideEncryption: false]], pluginFailureResultConstraint: 'FAILURE', profileName: 'decembers3', userMetadata: []
+            }
+        }
+    }
+}
